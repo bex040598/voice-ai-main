@@ -1,0 +1,141 @@
+# 🎓 ATMU AI Assistant - Uzbek Voice AI
+
+An intelligent voice assistant for Axborot Texnologiyalari va Menejment Universiteti (ATMU) with multilingual TTS support and RAG-powered responses.
+
+## ✨ Features
+
+- **Dual Assistant Modes:**
+  - **Assistant 1:** Browser-based TTS (fast, lightweight)
+  - **Assistant 2:** High-quality Uzbek voice using `facebook/mms-tts-uzb-script_cyrillic`
+- **RAG-Powered Responses:** Semantic search over university knowledge base
+- **Smart Caching:** In-memory LRU cache for faster responses
+- **Audio Interruption:** Instant stop when user starts typing or speaking
+- **Natural Conversations:** Clean responses without repetitive phrases
+- **Session Management:** Conversation history tracking
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Python 3.8+
+- Node.js (optional, for local development)
+- OpenAI or Google Gemini API key
+
+### Installation
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/Tursunov-Akhmadjon/voice-AI.git
+cd atmu-ai-assistant
+```
+
+2. **Set up backend**
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+3. **Configure environment variables**
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and add your API key:
+```env
+LLM_PROVIDER=openai  # or gemini
+LLM_API_KEY=your_actual_api_key_here
+```
+
+4. **Run the server**
+```bash
+uvicorn main:app --host 127.0.0.1 --port 8001 --reload
+```
+
+5. **Open the application**
+
+Navigate to http://127.0.0.1:8001 in your browser
+
+## 📁 Project Structure
+
+```
+voice AI/
+├── backend/
+│   ├── main.py                 # FastAPI application entry point
+│   ├── requirements.txt        # Python dependencies
+│   ├── .env                    # Environment variables (not in git)
+│   ├── .env.example           # Example environment config
+│   ├── university_data.txt    # Knowledge base
+│   └── services/
+│       ├── llm_service.py     # LLM integration (OpenAI/Gemini)
+│       ├── tts_service.py     # Text-to-Speech service
+│       ├── rag_service.py     # Semantic search & embeddings
+│       ├── cache_service.py   # Response caching
+│       └── conversation_service.py  # Session management
+├── frontend/
+│   ├── index.html             # Main UI
+│   ├── style.css              # Styling
+│   └── app.js                 # Frontend logic
+└── .gitignore                 # Git ignore rules
+```
+
+## 🌐 Deployment
+
+### Option: Heroku
+
+1. Create a `Procfile` in the root directory:
+```
+web: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+```
+
+2. Deploy:
+```bash
+heroku create your-app-name
+heroku config:set LLM_PROVIDER=openai
+heroku config:set LLM_API_KEY=your_api_key
+git push heroku main
+```
+
+## 🛠️ Development
+
+### Adding New Knowledge
+
+Edit `backend/university_data.txt` to add new information about the university.
+
+### Changing TTS Model
+
+Modify `backend/services/tts_service.py` to use a different model:
+```python
+self.model_name = "your-model-name"
+```
+
+### API Endpoints
+
+- `GET /` - Main application
+- `POST /chat` - Send message, get response
+- `GET /api/session` - Create new session
+- `GET /api/cache/stats` - Cache statistics
+
+## 📝 Environment Variables
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `LLM_PROVIDER` | LLM service to use | `openai` or `gemini` |
+| `LLM_API_KEY` | Your API key | `sk-...` |
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🙏 Acknowledgments
+
+- Facebook MMS TTS for Uzbek voice synthesis
+- OpenAI/Google for LLM services
+- FastAPI for the backend framework
