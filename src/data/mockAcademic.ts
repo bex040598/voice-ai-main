@@ -175,27 +175,101 @@ export const mockReceptionRequests: ReceptionRequest[] = [
     message: "Rektor qabuliga 12-may kuni yozilmoqchiman.",
     status: "new",
     createdAt: "2026-05-09T06:50:00.000Z"
+  },
+  {
+    id: "reception-3",
+    fullName: "Oybek Rasulov",
+    phone: "+998901112233",
+    type: "application",
+    message: "AI laboratoriya uchun qo'shimcha jihozlar masalasida ariza qoldiraman.",
+    status: "completed",
+    createdAt: "2026-05-07T09:12:00.000Z"
+  },
+  {
+    id: "reception-4",
+    fullName: "Maftuna Yo'ldosheva",
+    phone: "+998901113344",
+    type: "complaint",
+    message: "2-qavatdagi Wi-Fi sifati bo'yicha shikoyat yuboraman.",
+    status: "accepted",
+    createdAt: "2026-05-07T12:30:00.000Z"
+  },
+  {
+    id: "reception-5",
+    fullName: "Bekzod Erkinov",
+    phone: "+998901114455",
+    type: "suggestion",
+    message: "Voice assistantga inglizcha interfeys qo'shish bo'yicha taklif bor.",
+    status: "in_review",
+    createdAt: "2026-05-08T08:45:00.000Z"
+  },
+  {
+    id: "reception-6",
+    fullName: "Sitora Xasanova",
+    phone: "+998901115566",
+    type: "appointment",
+    message: "Rektor bilan grant loyihasi bo'yicha qisqa uchrashuv so'rayman.",
+    status: "new",
+    createdAt: "2026-05-08T15:20:00.000Z"
+  },
+  {
+    id: "reception-7",
+    fullName: "Diyorbek Aliyev",
+    phone: "+998901116677",
+    type: "application",
+    message: "AR guide sinovini kengaytirish uchun ruxsat so'rayman.",
+    status: "accepted",
+    createdAt: "2026-05-09T07:04:00.000Z"
+  },
+  {
+    id: "reception-8",
+    fullName: "Zarnigor Eshonqulova",
+    phone: "+998901117788",
+    type: "suggestion",
+    message: "Kutubxona NFC punktlari sonini ko'paytirish taklif qilinadi.",
+    status: "completed",
+    createdAt: "2026-05-09T07:40:00.000Z"
+  },
+  {
+    id: "reception-9",
+    fullName: "Mirjalol Hakimov",
+    phone: "+998901118899",
+    type: "complaint",
+    message: "Command room yonidagi monitorlar ishlamay qolgan.",
+    status: "rejected",
+    createdAt: "2026-05-09T08:10:00.000Z"
+  },
+  {
+    id: "reception-10",
+    fullName: "Sevinch Ruzmetova",
+    phone: "+998901119900",
+    type: "appointment",
+    message: "Dekanat bilan individual o'quv reja masalasi yuzasidan qabul so'rayman.",
+    status: "in_review",
+    createdAt: "2026-05-09T08:24:00.000Z"
   }
 ];
 
 export const mockMonitoringStats: MonitoringStats = {
-  todayVisitors: 182,
-  routeRequests: 416,
-  activeUsers: 68,
+  todayVisitors: 1284,
+  routeRequests: 842,
+  activeUsers: 468,
   topSearchedRooms: [
-    { name: "215-Xona", count: 49 },
-    { name: "Kutubxona", count: 32 },
-    { name: "301-AI Masterclass Hall", count: 27 }
+    { name: "215-Xona", count: 94 },
+    { name: "Kutubxona", count: 78 },
+    { name: "301-AI Masterclass Hall", count: 64 },
+    { name: "Rektor qabulxonasi", count: 41 },
+    { name: "MultimediaLab", count: 38 }
   ],
-  teacherSearchCount: 58,
-  nfcScanCount: 94,
-  receptionRequests: 16,
-  testSubmissions: 73,
+  teacherSearchCount: 203,
+  nfcScanCount: 176,
+  receptionRequests: 31,
+  testSubmissions: 173,
   systemHealth: {
-    api: 97,
-    socket: 95,
+    api: 99,
+    socket: 97,
     database: 99,
-    aiBridge: 91
+    aiBridge: 96
   }
 };
 

@@ -1,11 +1,12 @@
 import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { PageIntro } from "../../components/dashboard/PageIntro";
+import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
-import { createResource, deleteResource, getResources } from "../../features/resources/resources.service";
 import { mockSubjects } from "../../data/mockAcademic";
+import { createResource, deleteResource, getResources } from "../../features/resources/resources.service";
 import type { Resource } from "../../types";
 
 export const ResourcesPage = () => {
@@ -37,16 +38,16 @@ export const ResourcesPage = () => {
   return (
     <div className="space-y-6">
       <PageIntro
-        eyebrow="Resources"
+        eyebrow="Resource studio"
         title="Elektron resurs konstruktori"
-        description="Teacher va admin foydalanuvchilar PDF, video, slide yoki boshqa media resurslarni qo'shishi va boshqarishi mumkin."
+        description="Teacher va admin foydalanuvchilar PDF, video, slide yoki boshqa media resurslarni premium studio interfeysida qo'shishi va boshqarishi mumkin."
       />
 
       <Card>
         <div className="grid gap-3 md:grid-cols-[1fr_180px_200px]">
           <Input placeholder="Resurs sarlavhasi" value={title} onChange={(event) => setTitle(event.target.value)} />
           <select
-            className="rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-navy-900 outline-none"
+            className="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white outline-none"
             value={type}
             onChange={(event) => setType(event.target.value)}
           >
@@ -66,12 +67,15 @@ export const ResourcesPage = () => {
           <Card key={resource.id}>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="font-semibold text-navy-900">{resource.title}</p>
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="font-semibold text-white">{resource.title}</p>
+                <p className="mt-2 text-sm text-white/55">
                   {resource.type} | subject: {resource.subjectId}
                 </p>
+                <div className="mt-3">
+                  <Badge tone="info">Published</Badge>
+                </div>
               </div>
-              <button className="rounded-full bg-rose-50 p-2 text-rose-600" onClick={() => void removeResource(resource.id)} type="button">
+              <button className="rounded-full border border-rose-400/20 bg-rose-500/10 p-2 text-rose-100" onClick={() => void removeResource(resource.id)} type="button">
                 <Trash2 className="h-4 w-4" />
               </button>
             </div>

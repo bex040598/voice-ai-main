@@ -54,19 +54,19 @@ export const PortfolioPage = () => {
       <div className="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
         <Card>
           <div className="mb-4 flex items-center gap-3">
-            <FolderKanban className="h-5 w-5 text-cyan-600" />
-            <p className="font-['Space_Grotesk'] text-xl font-bold text-navy-900">Portfolios</p>
+            <FolderKanban className="h-5 w-5 text-cyan-300" />
+            <p className="font-['Space_Grotesk'] text-xl font-bold text-white">Portfolios</p>
           </div>
           <div className="space-y-3">
             {portfolios.map((portfolio) => (
               <button
                 key={portfolio.id}
-                className="w-full rounded-2xl border border-slate-200 bg-white/70 px-4 py-4 text-left transition hover:border-cyan-300"
+                className="w-full rounded-2xl border border-white/10 bg-white/6 px-4 py-4 text-left transition hover:border-cyan-300/35 hover:bg-white/8"
                 onClick={() => void selectPortfolio(portfolio)}
                 type="button"
               >
-                <p className="text-sm font-semibold text-navy-900">{portfolio.title}</p>
-                <p className="text-xs text-slate-500">{portfolio.description}</p>
+                <p className="text-sm font-semibold text-white">{portfolio.title}</p>
+                <p className="text-xs text-white/45">{portfolio.description}</p>
               </button>
             ))}
           </div>
@@ -75,10 +75,10 @@ export const PortfolioPage = () => {
         <Card>
           <div className="mb-4 flex items-end justify-between gap-4">
             <div>
-              <p className="font-['Space_Grotesk'] text-xl font-bold text-navy-900">
+              <p className="font-['Space_Grotesk'] text-xl font-bold text-white">
                 {selected?.title ?? "Portfolio tanlang"}
               </p>
-              <p className="text-sm text-slate-500">{selected?.description}</p>
+              <p className="text-sm text-white/55">{selected?.description}</p>
             </div>
           </div>
 
@@ -92,9 +92,9 @@ export const PortfolioPage = () => {
 
           <div className="grid gap-3 md:grid-cols-2">
             {items.map((item) => (
-              <div key={item.id} className="rounded-[24px] border border-slate-200 bg-white/70 p-4">
-                <p className="text-sm font-semibold text-navy-900">{item.type}</p>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
+              <div key={item.id} className="rounded-[24px] border border-white/10 bg-white/6 p-4">
+                <p className="text-sm font-semibold text-white">{item.type}</p>
+                <p className="mt-2 text-sm leading-6 text-white/62">{item.description}</p>
               </div>
             ))}
           </div>

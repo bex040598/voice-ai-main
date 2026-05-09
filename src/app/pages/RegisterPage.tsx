@@ -46,7 +46,7 @@ export const RegisterPage = () => {
           <Input placeholder="Email" value={email} onChange={(event) => setEmail(event.target.value)} />
           <Input type="password" placeholder="Parol" value={password} onChange={(event) => setPassword(event.target.value)} />
           <select
-            className="rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-navy-900 outline-none"
+            className="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white outline-none"
             value={role}
             onChange={(event) => setRole(event.target.value as Role)}
           >

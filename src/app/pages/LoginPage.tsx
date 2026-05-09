@@ -73,17 +73,17 @@ export const LoginPage = () => {
 
         <Card>
           <div className="grid gap-4">
-            <label className="grid gap-2 text-sm font-medium text-slate-600">
+            <label className="grid gap-2 text-sm font-medium text-white/62">
               <span className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-cyan-600" />
+                <Mail className="h-4 w-4 text-cyan-300" />
                 Email
               </span>
               <Input value={email} onChange={(event) => setEmail(event.target.value)} />
             </label>
 
-            <label className="grid gap-2 text-sm font-medium text-slate-600">
+            <label className="grid gap-2 text-sm font-medium text-white/62">
               <span className="flex items-center gap-2">
-                <LockKeyhole className="h-4 w-4 text-cyan-600" />
+                <LockKeyhole className="h-4 w-4 text-cyan-300" />
                 Parol
               </span>
               <Input type="password" value={password} onChange={(event) => setPassword(event.target.value)} />

@@ -26,14 +26,15 @@ export const identifyFaceMock = async (): Promise<FaceGreetingResult> =>
     fallback: async () => {
       const candidates = [
         null,
-        mockUsers.find((user) => user.role === "teacher") ?? null,
-        mockUsers.find((user) => user.role === "student") ?? null
+        mockUsers.find((user) => user.fullName.includes("Nodira")) ?? null,
+        mockUsers.find((user) => user.fullName.includes("G'olib")) ?? null,
+        mockUsers.find((user) => user.fullName.includes("Bexzod")) ?? null
       ];
       const recognizedUser = candidates[Math.floor(Math.random() * candidates.length)];
       return {
         recognizedUser,
         greeting: createGreeting(recognizedUser),
-        confidence: recognizedUser ? 0.84 : 0.48
+        confidence: recognizedUser ? 0.9 + Math.random() * 0.08 : 0.46 + Math.random() * 0.1
       };
     }
   });

@@ -1,6 +1,28 @@
 export type Role = "guest" | "student" | "teacher" | "admin" | "super_admin";
 
 export type Emotion = "confused" | "hurry" | "happy" | "neutral" | "angry" | "shy";
+export type ThemeMode = "aurora" | "clear";
+export type LanguageCode = "uz" | "en";
+export type ServiceStatus = "online" | "active" | "demo" | "ready" | "warning" | "offline";
+export type ActivityType =
+  | "face"
+  | "route"
+  | "nfc"
+  | "voice"
+  | "teacher"
+  | "telegram"
+  | "reception"
+  | "system";
+export type AvatarMode =
+  | "idle"
+  | "greeting"
+  | "speaking"
+  | "thinking"
+  | "pointing"
+  | "happy"
+  | "neutral"
+  | "listening"
+  | "sleep";
 
 export type GraphNodeType =
   | "entrance"
@@ -252,6 +274,65 @@ export interface MonitoringStats {
     database: number;
     aiBridge: number;
   };
+}
+
+export interface DashboardMetric {
+  id: string;
+  label: string;
+  value: number;
+  suffix?: string;
+  change: number;
+  hint: string;
+  tone?: "cyan" | "violet" | "emerald" | "navy" | "amber";
+  series: number[];
+}
+
+export interface ActivityEvent {
+  id: string;
+  type: ActivityType;
+  title: string;
+  description: string;
+  timestamp: string;
+  badge?: string;
+}
+
+export interface SystemService {
+  id: string;
+  name: string;
+  status: ServiceStatus;
+  description: string;
+  latency: string;
+}
+
+export interface ChartPoint {
+  label: string;
+  routeRequests: number;
+  voiceQueries: number;
+  faceGreetings: number;
+  nfcScans: number;
+  telegramMessages: number;
+  arSessions: number;
+}
+
+export interface HeatmapPoint {
+  id: string;
+  day: string;
+  slot: string;
+  value: number;
+}
+
+export interface TeacherRanking {
+  id: string;
+  fullName: string;
+  searches: number;
+  department: string;
+}
+
+export interface SystemLog {
+  id: string;
+  level: "info" | "warning" | "error";
+  message: string;
+  createdAt: string;
 }
 
 export interface SearchSuggestion<T = string> {

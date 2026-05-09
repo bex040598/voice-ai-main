@@ -1,6 +1,7 @@
 import { CheckCircle2, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { PageIntro } from "../../components/dashboard/PageIntro";
+import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
 import { getQuestionsByTest, getTests, submitTest } from "../../features/tests/tests.service";
@@ -52,37 +53,40 @@ export const TestsPage = () => {
 
       <div className="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
         <Card>
-          <p className="font-['Space_Grotesk'] text-xl font-bold text-navy-900">Mavjud testlar</p>
+          <p className="font-['Space_Grotesk'] text-xl font-bold text-white">Mavjud testlar</p>
           <div className="mt-4 space-y-3">
             {tests.map((test) => (
               <button
                 key={test.id}
-                className="w-full rounded-2xl border border-slate-200 bg-white/70 px-4 py-4 text-left transition hover:border-cyan-300"
+                className="w-full rounded-2xl border border-white/10 bg-white/6 px-4 py-4 text-left transition hover:border-cyan-300/35 hover:bg-white/8"
                 onClick={() => chooseTest(test)}
                 type="button"
               >
-                <p className="text-sm font-semibold text-navy-900">{test.title}</p>
-                <p className="text-xs text-slate-500">{test.subjectId}</p>
+                <p className="text-sm font-semibold text-white">{test.title}</p>
+                <p className="text-xs text-white/45">{test.subjectId}</p>
               </button>
             ))}
           </div>
         </Card>
 
         <Card>
-          <div className="mb-4 flex items-center gap-3">
-            <Sparkles className="h-5 w-5 text-cyan-600" />
-            <p className="font-['Space_Grotesk'] text-xl font-bold text-navy-900">
-              {selectedTest?.title ?? "Test tanlang"}
-            </p>
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <Sparkles className="h-5 w-5 text-cyan-300" />
+              <p className="font-['Space_Grotesk'] text-xl font-bold text-white">
+                {selectedTest?.title ?? "Test tanlang"}
+              </p>
+            </div>
+            {result ? <Badge tone="success">Natija: {result.score}</Badge> : null}
           </div>
 
           <div className="space-y-5">
             {questions.map((question) => (
-              <div key={question.id} className="rounded-[24px] border border-slate-200 bg-white/70 p-4">
-                <p className="text-sm font-semibold text-navy-900">{question.text}</p>
+              <div key={question.id} className="rounded-[24px] border border-white/10 bg-white/6 p-4">
+                <p className="text-sm font-semibold text-white">{question.text}</p>
                 <div className="mt-3 grid gap-2">
                   {question.options.map((option) => (
-                    <label key={option} className="flex items-center gap-3 rounded-2xl border border-slate-100 px-3 py-2 text-sm">
+                    <label key={option} className="flex items-center gap-3 rounded-2xl border border-white/10 px-3 py-2 text-sm text-white/72">
                       <input
                         checked={answers[question.id] === option}
                         name={question.id}
@@ -100,7 +104,7 @@ export const TestsPage = () => {
           <div className="mt-5 flex items-center gap-3">
             <Button onClick={() => void handleSubmit()}>Testni topshirish</Button>
             {result ? (
-              <div className="flex items-center gap-2 text-sm font-semibold text-emerald-600">
+              <div className="flex items-center gap-2 text-sm font-semibold text-emerald-200">
                 <CheckCircle2 className="h-4 w-4" />
                 Natija: {result.score}
               </div>

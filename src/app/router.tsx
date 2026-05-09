@@ -12,6 +12,7 @@ import { ArGuidePage } from "./pages/ArGuidePage";
 import { AssistantPage } from "./pages/AssistantPage";
 import { FaceGreetingPage } from "./pages/FaceGreetingPage";
 import { VoiceEmotionPage } from "./pages/VoiceEmotionPage";
+import { AvatarPage } from "./pages/AvatarPage";
 import { NfcGuidePage } from "./pages/NfcGuidePage";
 import { TeachersPage } from "./pages/TeachersPage";
 import { ResourcesPage } from "./pages/ResourcesPage";
@@ -28,8 +29,8 @@ import type { Role } from "../types";
 
 const AccessDenied = ({ targetRole }: { targetRole: Role }) => (
   <Card className="mx-auto max-w-xl text-center">
-    <p className="font-['Space_Grotesk'] text-2xl font-bold text-navy-900">Access denied</p>
-    <p className="mt-3 text-sm leading-7 text-slate-600">
+    <p className="font-['Space_Grotesk'] text-2xl font-bold text-white">Access denied</p>
+    <p className="mt-3 text-sm leading-7 text-white/62">
       Bu sahifaga kirish uchun {targetRole} roliga ega foydalanuvchi kerak.
     </p>
     <div className="mt-5">
@@ -100,6 +101,7 @@ export const router = createBrowserRouter([
       { path: "assistant", element: <AssistantPage /> },
       { path: "face-greeting", element: <FaceGreetingPage /> },
       { path: "voice-emotion", element: <VoiceEmotionPage /> },
+      { path: "avatar", element: <AvatarPage /> },
       { path: "nfc-guide", element: <NfcGuidePage /> },
       { path: "teachers", element: <TeachersPage /> },
       { path: "resources", element: <ResourcesPage /> },

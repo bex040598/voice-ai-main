@@ -18,12 +18,12 @@ export const Stepper = ({ steps }: StepperProps) => (
         <div
           className={cn(
             "mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold",
-            index === 0 ? "bg-cyan-500 text-white" : "bg-slate-100 text-slate-700"
+            index === 0 ? "bg-cyan-500 text-white" : "bg-white/12 text-white/75"
           )}
         >
           {index + 1}
         </div>
-        <p className="text-sm leading-6 text-slate-700">{step}</p>
+        <p className="text-sm leading-6 text-white/68">{step}</p>
       </motion.div>
     ))}
   </div>

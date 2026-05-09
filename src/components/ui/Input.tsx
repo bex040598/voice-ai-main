@@ -7,7 +7,7 @@ export const Input = ({
 }: InputHTMLAttributes<HTMLInputElement>) => (
   <input
     className={cn(
-      "w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-navy-900 outline-none ring-0 transition focus:border-cyan-400 focus:bg-white",
+      "w-full rounded-2xl border border-white/12 bg-white/7 px-4 py-3 text-sm text-[color:var(--atmura-text)] outline-none ring-0 transition placeholder:text-white/35 focus:border-cyan-400/55 focus:bg-white/10",
       className
     )}
     {...props}
@@ -20,7 +20,7 @@ export const Textarea = ({
 }: TextareaHTMLAttributes<HTMLTextAreaElement>) => (
   <textarea
     className={cn(
-      "min-h-28 w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-navy-900 outline-none transition focus:border-cyan-400 focus:bg-white",
+      "min-h-28 w-full rounded-2xl border border-white/12 bg-white/7 px-4 py-3 text-sm text-[color:var(--atmura-text)] outline-none transition placeholder:text-white/35 focus:border-cyan-400/55 focus:bg-white/10",
       className
     )}
     {...props}

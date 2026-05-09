@@ -1,7 +1,8 @@
 import { apiRequest } from "../../lib/api";
 import { astar } from "../../lib/algorithms/astar";
 import { dijkstra } from "../../lib/algorithms/dijkstra";
-import { findNearestNode, toRouteResponse } from "../../lib/algorithms/routeUtils";
+import { findNearestNode } from "../../lib/algorithms/nearestNode";
+import { toRouteResponse } from "../../lib/algorithms/routeInstructions";
 import { mockGraphEdges, mockGraphNodes, mockRooms } from "../../data/mockCampus";
 import type { GraphNode, RouteRequest, RouteResponse } from "../../types";
 

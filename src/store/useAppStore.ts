@@ -1,5 +1,13 @@
 import { create } from "zustand";
-import type { AssistantMessage, Role, RouteResponse, User } from "../types";
+import type {
+  AssistantMessage,
+  AvatarMode,
+  LanguageCode,
+  Role,
+  RouteResponse,
+  ThemeMode,
+  User
+} from "../types";
 import { mockUsers } from "../data/mockUsers";
 
 const defaultUser = mockUsers.find((user) => user.role === "guest") ?? mockUsers[0];
@@ -13,13 +21,26 @@ interface ToastState {
 interface AppState {
   currentUser: User;
   currentRole: Role;
+  theme: ThemeMode;
+  language: LanguageCode;
+  sidebarCollapsed: boolean;
+  sidebarMobileOpen: boolean;
   assistantOpen: boolean;
   activeRoute: RouteResponse | null;
+  avatarMode: AvatarMode;
   assistantMessages: AssistantMessage[];
   toasts: ToastState[];
   setCurrentUser: (user: User) => void;
   setCurrentRole: (role: Role) => void;
+  setTheme: (theme: ThemeMode) => void;
+  toggleTheme: () => void;
+  setLanguage: (language: LanguageCode) => void;
+  toggleSidebar: () => void;
+  setSidebarMobileOpen: (open: boolean) => void;
+  toggleSidebarMobile: () => void;
+  setAssistantOpen: (open: boolean) => void;
   toggleAssistant: () => void;
+  setAvatarMode: (mode: AvatarMode) => void;
   pushAssistantMessage: (message: AssistantMessage) => void;
   setActiveRoute: (route: RouteResponse | null) => void;
   pushToast: (toast: Omit<ToastState, "id">) => void;
@@ -29,8 +50,13 @@ interface AppState {
 export const useAppStore = create<AppState>((set) => ({
   currentUser: defaultUser,
   currentRole: defaultUser.role,
+  theme: "aurora",
+  language: "uz",
+  sidebarCollapsed: false,
+  sidebarMobileOpen: false,
   assistantOpen: false,
   activeRoute: null,
+  avatarMode: "idle",
   assistantMessages: [
     {
       id: "assistant-welcome",
@@ -48,7 +74,16 @@ export const useAppStore = create<AppState>((set) => ({
         mockUsers.find((user) => user.role === currentRole) ??
         state.currentUser
     })),
+  setTheme: (theme) => set({ theme }),
+  toggleTheme: () =>
+    set((state) => ({ theme: state.theme === "aurora" ? "clear" : "aurora" })),
+  setLanguage: (language) => set({ language }),
+  toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
+  setSidebarMobileOpen: (sidebarMobileOpen) => set({ sidebarMobileOpen }),
+  toggleSidebarMobile: () => set((state) => ({ sidebarMobileOpen: !state.sidebarMobileOpen })),
+  setAssistantOpen: (assistantOpen) => set({ assistantOpen }),
   toggleAssistant: () => set((state) => ({ assistantOpen: !state.assistantOpen })),
+  setAvatarMode: (avatarMode) => set({ avatarMode }),
   pushAssistantMessage: (message) =>
     set((state) => ({ assistantMessages: [...state.assistantMessages, message] })),
   setActiveRoute: (activeRoute) => set({ activeRoute }),

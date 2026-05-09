@@ -40,17 +40,17 @@ export const RouteGuidePage = () => {
       <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
         <Card>
           <div className="mb-4 flex items-center gap-3">
-            <Sparkles className="h-5 w-5 text-cyan-600" />
+            <Sparkles className="h-5 w-5 text-cyan-300" />
             <div>
-              <p className="font-['Space_Grotesk'] text-xl font-bold text-navy-900">Demo current location</p>
-              <p className="text-sm text-slate-500">Asosiy kirish, bino A, 1-qavat</p>
+              <p className="font-['Space_Grotesk'] text-xl font-bold text-white">Demo current location</p>
+              <p className="text-sm text-white/55">Asosiy kirish, bino A, 1-qavat</p>
             </div>
           </div>
-          <div className="space-y-3 text-sm leading-7 text-slate-600">
+          <div className="space-y-3 text-sm leading-7 text-white/62">
             <p>1. Joriy nuqta campus graph tuguniga snap qilinadi.</p>
             <p>2. Maqsad xona yoki o'qituvchi kabinetidan target node aniqlanadi.</p>
             <p>3. A* yoki Dijkstra yordamida multi-floor path topiladi.</p>
-            <p>4. Instructions generator koridor, zina va lift segmentlari bo'yicha matnli yo'l yozyapti.</p>
+            <p>4. Instructions generator koridor, zina va lift segmentlari bo'yicha matnli yo'l yozadi.</p>
           </div>
         </Card>
         <RouteInstructions route={activeRoute} />

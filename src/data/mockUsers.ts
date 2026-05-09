@@ -32,7 +32,17 @@ const studentSeed: Array<[string, string, string, string, number, number]> = [
   ["Dilshoda Ahmedova", "dilshoda", "AI-301", "Sun'iy intellekt", 3, 91],
   ["Abror Jo'rayev", "abror", "MM-101", "Multimedia", 1, 79],
   ["Sardor Nurmatov", "sardor", "SE-201", "Dasturiy injiniring", 2, 86],
-  ["Mohira Tursunova", "mohira", "AI-301", "Sun'iy intellekt", 3, 93]
+  ["Mohira Tursunova", "mohira", "AI-301", "Sun'iy intellekt", 3, 93],
+  ["Oybek Rasulov", "oybek", "CY-202", "Kiberxavfsizlik", 2, 84],
+  ["Maftuna Yo'ldosheva", "maftuna", "CY-202", "Kiberxavfsizlik", 2, 89],
+  ["Bekzod Erkinov", "bekzod", "MM-202", "Multimedia", 2, 82],
+  ["Sitora Xasanova", "sitora", "AI-401", "Sun'iy intellekt", 4, 95],
+  ["Diyorbek Aliyev", "diyorbek", "SE-301", "Dasturiy injiniring", 3, 83],
+  ["Zarnigor Eshonqulova", "zarnigor", "SE-301", "Dasturiy injiniring", 3, 90],
+  ["Mirjalol Hakimov", "mirjalol", "DS-402", "Data Science", 4, 91],
+  ["Sevinch Ruzmetova", "sevinch", "DS-402", "Data Science", 4, 88],
+  ["Islomjon Rasulov", "islomjon", "AI-201", "Sun'iy intellekt", 2, 80],
+  ["Feruza Nematova", "feruza", "MM-303", "Multimedia", 3, 92]
 ];
 
 const studentUsers: User[] = studentSeed.map(([fullName, slug], index) => ({
@@ -135,6 +145,20 @@ export const mockNotifications: Notification[] = [
     title: "NFC sync",
     message: "8 ta NFC nuqta muvaffaqiyatli yangilandi.",
     isRead: true
+  },
+  {
+    id: "notif-4",
+    userId: "teacher-1",
+    title: "AI savol generatori",
+    message: "Test savollari uchun yangi draft tavsiyalar tayyor.",
+    isRead: false
+  },
+  {
+    id: "notif-5",
+    userId: "student-5",
+    title: "Portfolio feedback",
+    message: "Portfolio itemingiz bo'yicha o'qituvchi izohi qo'shildi.",
+    isRead: false
   }
 ];
 
@@ -159,5 +183,26 @@ export const mockAuditLogs: AuditLog[] = [
     action: "created test",
     entity: "Test",
     createdAt: "2026-05-09T07:20:00.000Z"
+  },
+  {
+    id: "audit-4",
+    userId: "admin-1",
+    action: "linked nfc tag",
+    entity: "NfcTag",
+    createdAt: "2026-05-09T07:32:00.000Z"
+  },
+  {
+    id: "audit-5",
+    userId: "super-admin-1",
+    action: "exported monitoring report",
+    entity: "MonitoringReport",
+    createdAt: "2026-05-09T08:10:00.000Z"
+  },
+  {
+    id: "audit-6",
+    userId: "admin-1",
+    action: "updated teacher schedule",
+    entity: "TeacherSchedule",
+    createdAt: "2026-05-09T08:42:00.000Z"
   }
 ];

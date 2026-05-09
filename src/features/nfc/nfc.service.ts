@@ -24,7 +24,7 @@ export const resolveNfcTag = async (code: string): Promise<NfcResolveResult> =>
 
       return {
         tag,
-        message: `Siz ${tag.description} hududidasiz. Yaqin joylar: ${nearby}.`
+        message: `Siz ${tag.floorId.replace("floor-", "").toUpperCase()} hududidasiz. Yaqin joylar: ${nearby}. ${tag.description} bo'yicha yo'nalish tayyor.`
       };
     }
   });

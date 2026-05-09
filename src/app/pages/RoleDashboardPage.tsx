@@ -1,82 +1,227 @@
 import {
   AlarmClockCheck,
   BookOpenText,
-  Boxes,
   BrainCircuit,
   Building2,
   Camera,
   ChartNoAxesCombined,
+  Edit3,
   FileBadge2,
   LibraryBig,
+  Plus,
   ShieldEllipsis,
+  Trash2,
   UserCog,
   Users
 } from "lucide-react";
-import { mockMonitoringStats, mockResources, mockSubjects, mockTests } from "../../data/mockAcademic";
-import { mockNfcTags, mockRooms } from "../../data/mockCampus";
+import { useEffect, useMemo, useState } from "react";
+import { mockMonitoringStats, mockReceptionRequests, mockResources, mockSubjects, mockTests } from "../../data/mockAcademic";
+import { mockBuildings, mockNfcTags, mockRooms } from "../../data/mockCampus";
 import { mockTeacherSchedules } from "../../data/mockTeachers";
 import { mockAuditLogs, mockStudentProfiles, mockTeacherProfiles, mockUsers } from "../../data/mockUsers";
 import { formatRole } from "../../lib/utils";
+import { useAppStore } from "../../store/useAppStore";
 import type { Role } from "../../types";
 import { MetricCard } from "../../components/dashboard/MetricCard";
 import { PageIntro } from "../../components/dashboard/PageIntro";
-import { Card } from "../../components/ui/Card";
 import { Badge } from "../../components/ui/Badge";
+import { Button } from "../../components/ui/Button";
+import { Card } from "../../components/ui/Card";
+import { Input } from "../../components/ui/Input";
+import { Modal } from "../../components/ui/Modal";
+import { Tabs } from "../../components/ui/Tabs";
 
 interface RoleDashboardPageProps {
   role: Role;
 }
 
-const rolePanels: Record<Role, { title: string; description: string; cards: Array<[string, string]> }> = {
+interface AdminRow {
+  key: string;
+  title: string;
+  subtitle: string;
+  status: string;
+}
+
+const rolePanels: Record<Role, { title: string; description: string; highlights: string[] }> = {
   guest: {
     title: "Mehmon dashboard",
-    description: "Face greeting, campus map, NFC touch va rektor qabulxonasiga tez kirish nuqtalari.",
-    cards: [
-      ["Guest guidance", "AR route, Telegram route va NFC touch demo"],
-      ["Quick search", "Xona, dekanat, kafedra yoki o'qituvchi qidirish"],
-      ["Reception", "Virtual rektor qabulxonasi bilan bevosita murojaat"]
+    description: "Face greeting, campus map, NFC touch va virtual reception oqimlari birlashtirilgan.",
+    highlights: [
+      "Kamera orqali kirish va salomlashish",
+      "Xona, kafedra, o'qituvchi qidiruvi",
+      "NFC va AR guide bo'yicha tezkor oqim"
     ]
   },
   student: {
     title: "Talaba kabineti",
-    description: "Shaxsiy kabinet, dars jadvali, portfolio, test va elektron resurslar bir sahifada.",
-    cards: [
-      ["Academic flow", "Schedule, resurslar, topshiriq va baholar"],
-      ["Portfolio", "Multimedia ishlar va fayl yuklash"],
-      ["AI helper", "Avatar yordamida savol-javob va route suggestion"]
+    description: "Dars jadvali, elektron resurslar, portfolio va testlar premium student workspace'da jamlangan.",
+    highlights: [
+      "AI yordamida route va savol-javob",
+      "Portfolio va topshiriq modullari",
+      "Natijalar va reyting monitoringi"
     ]
   },
   teacher: {
     title: "O'qituvchi kabineti",
-    description: "Fanlar, testlar, elektron resurs va room schedule boshqaruvi uchun operatsion panel.",
-    cards: [
-      ["Teaching ops", "Fan, topic, resource va test yaratish"],
-      ["Portfolio review", "Talabalar ishlarini ko'rish va baholash"],
-      ["AI generator", "Demo test savollari generatsiyasi uchun tayyor qatlam"]
+    description: "Fanlar, testlar, resurslar va xona jadvali boshqaruvi uchun operatsion panel.",
+    highlights: [
+      "Teaching ops va content constructor",
+      "AI yordamida test savollari generatsiya qatlamlari",
+      "Talabalar portfolio monitoringi"
     ]
   },
   admin: {
-    title: "Admin panel",
-    description: "Kampus xaritasi, users, monitoring, NFC, face database va AI modullarini boshqarish markazi.",
-    cards: [
-      ["Campus graph", "Node, edge, building va floor mapping"],
-      ["Monitoring", "Traffic, searches, requests va system health"],
-      ["Operations", "Telegram, AI settings va hisobotlar"]
+    title: "Admin control center",
+    description: "Users, campus graph, teacher schedules, NFC, reception requests va monitoring markazi.",
+    highlights: [
+      "Campus graph va room inventory tahriri",
+      "NFC / Telegram / AI settings konfiguratsiyasi",
+      "Operational dashboards va audit loglar"
     ]
   },
   super_admin: {
-    title: "Super admin control room",
-    description: "Permissions, audit log, security monitoring, API keys va backup boshqaruvi.",
-    cards: [
-      ["Security", "RBAC, audit, health va policy ko'rinishi"],
-      ["Governance", "Permission management va critical actions log"],
-      ["Infrastructure", "API keys, backup va adapters readiness"]
+    title: "Super admin governance room",
+    description: "Security monitoring, RBAC, audit log, API keys va backup boshqaruv markazi.",
+    highlights: [
+      "Permissions va critical action governance",
+      "System health va infra loglari",
+      "API keys, backup va security kuzatuvi"
     ]
   }
 };
 
+const adminTabs = [
+  { id: "users", label: "Users" },
+  { id: "rooms", label: "Rooms" },
+  { id: "buildings", label: "Buildings" },
+  { id: "schedules", label: "Teacher schedules" },
+  { id: "nfc", label: "NFC tags" },
+  { id: "reception", label: "Reception" },
+  { id: "audit", label: "Audit logs" },
+  { id: "settings", label: "System settings" }
+] as const;
+
 export const RoleDashboardPage = ({ role }: RoleDashboardPageProps) => {
+  const pushToast = useAppStore((state) => state.pushToast);
   const panel = rolePanels[role];
+  const [search, setSearch] = useState("");
+  const [tab, setTab] = useState<(typeof adminTabs)[number]["id"]>("users");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [managedRows, setManagedRows] = useState<AdminRow[]>([]);
+  const [selectedRow, setSelectedRow] = useState<AdminRow | null>(null);
+  const [formTitle, setFormTitle] = useState("");
+  const [formSubtitle, setFormSubtitle] = useState("");
+  const [formStatus, setFormStatus] = useState("");
+  const [page, setPage] = useState(1);
+
+  const baseAdminRows = useMemo<AdminRow[]>(() => {
+    switch (tab) {
+      case "users":
+        return mockUsers.map((item) => ({ key: item.id, title: item.fullName, subtitle: item.role, status: "active" }));
+      case "rooms":
+        return mockRooms.map((item) => ({ key: item.id, title: item.name, subtitle: item.type, status: item.floorId }));
+      case "buildings":
+        return mockBuildings.map((item) => ({ key: item.id, title: item.name, subtitle: item.description, status: "mapped" }));
+      case "schedules":
+        return mockTeacherSchedules.map((item) => ({
+          key: item.id,
+          title: item.subject,
+          subtitle: `${item.weekday} ${item.startTime}-${item.endTime}`,
+          status: item.roomId
+        }));
+      case "nfc":
+        return mockNfcTags.map((item) => ({ key: item.id, title: item.code, subtitle: item.description, status: item.floorId }));
+      case "reception":
+        return mockReceptionRequests.map((item) => ({
+          key: item.id,
+          title: item.fullName,
+          subtitle: item.type,
+          status: item.status
+        }));
+      case "audit":
+        return mockAuditLogs.map((item) => ({ key: item.id, title: item.action, subtitle: item.entity, status: item.createdAt }));
+      default:
+        return [
+          { key: "setting-ai", title: "AI Adapter", subtitle: "assistant-mock-adapter", status: "active" },
+          { key: "setting-telegram", title: "Telegram Bot", subtitle: "linked", status: "healthy" },
+          { key: "setting-rbac", title: "RBAC", subtitle: "student, teacher, admin, super_admin", status: "live" }
+        ];
+    }
+  }, [tab]);
+
+  useEffect(() => {
+    setManagedRows(baseAdminRows);
+    setSelectedRow(null);
+    setPage(1);
+  }, [baseAdminRows]);
+
+  const filteredAdminRows = useMemo(
+    () => managedRows.filter((row) => `${row.title} ${row.subtitle} ${row.status}`.toLowerCase().includes(search.toLowerCase())),
+    [managedRows, search]
+  );
+
+  const totalPages = Math.max(1, Math.ceil(filteredAdminRows.length / 8));
+  const paginatedAdminRows = filteredAdminRows.slice((page - 1) * 8, page * 8);
+
+  useEffect(() => {
+    setPage((current) => Math.min(current, totalPages));
+  }, [totalPages]);
+
+  const showAdminCenter = role === "admin" || role === "super_admin";
+
+  const openCreateModal = () => {
+    setSelectedRow(null);
+    setFormTitle("");
+    setFormSubtitle("");
+    setFormStatus("");
+    setModalOpen(true);
+  };
+
+  const openEditModal = (row: AdminRow) => {
+    setSelectedRow(row);
+    setFormTitle(row.title);
+    setFormSubtitle(row.subtitle);
+    setFormStatus(row.status);
+    setModalOpen(true);
+  };
+
+  const saveAdminRow = () => {
+    if (!formTitle.trim()) {
+      pushToast({ title: "Sarlavha kiriting.", tone: "warning" });
+      return;
+    }
+
+    const nextRow: AdminRow = {
+      key: selectedRow?.key ?? `${tab}-${Date.now()}`,
+      title: formTitle.trim(),
+      subtitle: formSubtitle.trim() || "custom item",
+      status: formStatus.trim() || "draft"
+    };
+
+    setManagedRows((state) =>
+      selectedRow ? state.map((row) => (row.key === selectedRow.key ? nextRow : row)) : [nextRow, ...state]
+    );
+    setModalOpen(false);
+    setSelectedRow(null);
+    setPage(1);
+    pushToast({
+      title: selectedRow ? "Yozuv yangilandi." : "Yangi yozuv yaratildi.",
+      tone: "success"
+    });
+  };
+
+  const confirmDelete = () => {
+    if (!selectedRow) {
+      setDeleteOpen(false);
+      return;
+    }
+
+    setManagedRows((state) => state.filter((row) => row.key !== selectedRow.key));
+    setDeleteOpen(false);
+    setSelectedRow(null);
+    pushToast({ title: "Yozuv o'chirildi.", tone: "warning" });
+  };
 
   return (
     <div className="space-y-6">
@@ -89,147 +234,207 @@ export const RoleDashboardPage = ({ role }: RoleDashboardPageProps) => {
       <div className="grid gap-4 lg:grid-cols-3">
         <MetricCard
           label="Users"
-          value={String(mockUsers.filter((user) => user.role === role || role === "admin" || role === "super_admin").length)}
+          value={String(mockUsers.filter((user) => user.role === role || showAdminCenter).length)}
           hint={`${formatRole(role)} bo'yicha tayyor demo yozuvlar`}
           icon={role === "student" ? Users : role === "teacher" ? UserCog : Users}
+          accent="cyan"
         />
         <MetricCard
           label="Resources"
           value={String(mockResources.length)}
           hint="MultimediaLab kontent va elektron materiallar"
           icon={role === "student" ? BookOpenText : LibraryBig}
-          accent="navy"
+          accent="violet"
         />
         <MetricCard
           label="Live Ops"
-          value={
-            role === "guest"
-              ? `${mockNfcTags.length} NFC`
-              : role === "teacher"
-                ? `${mockTests.length} test`
-                : `${mockMonitoringStats.activeUsers}`
-          }
-          hint="Real-time ishlash uchun tayyor demo signal"
+          value={showAdminCenter ? mockMonitoringStats.activeUsers : role === "teacher" ? mockTests.length : mockNfcTags.length}
+          hint="Real-time demo signal va integratsiya holati"
           icon={role === "guest" ? Camera : role === "teacher" ? BrainCircuit : ChartNoAxesCombined}
           accent="emerald"
         />
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[1.15fr_0.95fr]">
-        <Card>
-          <div className="mb-4 flex items-center justify-between">
-            <div>
-              <p className="font-['Space_Grotesk'] text-xl font-bold text-navy-900">{panel.title}</p>
-              <p className="text-sm text-slate-500">Role-specific modules va operational checklist</p>
+      {!showAdminCenter ? (
+        <div className="grid gap-6 xl:grid-cols-[1.16fr_0.84fr]">
+          <Card>
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <p className="font-['Space_Grotesk'] text-2xl font-bold text-white">{panel.title}</p>
+                <p className="text-sm text-white/55">Role-specific highlight bloklari va joriy operatsiyalar.</p>
+              </div>
+              <Badge tone="info">{formatRole(role)}</Badge>
             </div>
-            <Badge tone="info">{formatRole(role)}</Badge>
-          </div>
-          <div className="grid gap-3 md:grid-cols-3">
-            {panel.cards.map(([title, description]) => (
-              <div key={title} className="rounded-[24px] border border-slate-200 bg-white/70 p-4">
-                <p className="font-semibold text-navy-900">{title}</p>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
-              </div>
-            ))}
-          </div>
-        </Card>
+            <div className="grid gap-4 md:grid-cols-3">
+              {panel.highlights.map((item) => (
+                <div key={item} className="rounded-[24px] border border-white/10 bg-white/6 p-4">
+                  <p className="text-sm font-semibold text-white">{item}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
 
-        <Card>
-          {role === "guest" ? (
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <Building2 className="h-5 w-5 text-cyan-600" />
-                <p className="font-semibold text-navy-900">Guest quick services</p>
-              </div>
-              <p className="text-sm leading-6 text-slate-600">
-                Xona qidirish, NFC touch, AR route va rektor qabulxonasiga murojaat qilish shu rol uchun asosiy oqimdir.
-              </p>
-              <div className="grid gap-3">
+          <Card>
+            {role === "guest" ? (
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <Building2 className="h-5 w-5 text-cyan-300" />
+                  <p className="font-semibold text-white">Guest quick services</p>
+                </div>
                 {mockRooms.slice(0, 4).map((room) => (
-                  <div key={room.id} className="rounded-2xl border border-slate-200 bg-white/70 px-4 py-3">
-                    <p className="text-sm font-semibold text-navy-900">{room.name}</p>
-                    <p className="text-xs text-slate-500">{room.description}</p>
+                  <div key={room.id} className="rounded-2xl border border-white/10 bg-white/6 px-4 py-3">
+                    <p className="text-sm font-semibold text-white">{room.name}</p>
+                    <p className="text-xs text-white/45">{room.description}</p>
                   </div>
                 ))}
               </div>
-            </div>
-          ) : null}
+            ) : null}
 
-          {role === "student" ? (
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <AlarmClockCheck className="h-5 w-5 text-cyan-600" />
-                <p className="font-semibold text-navy-900">Student pulse</p>
-              </div>
-              {mockStudentProfiles.slice(0, 4).map((profile) => (
-                <div key={profile.id} className="rounded-2xl border border-slate-200 bg-white/70 px-4 py-3">
-                  <p className="text-sm font-semibold text-navy-900">{profile.group}</p>
-                  <p className="text-xs text-slate-500">
-                    {profile.faculty} | Kurs {profile.course} | Reyting {profile.rating}
-                  </p>
+            {role === "student" ? (
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <AlarmClockCheck className="h-5 w-5 text-cyan-300" />
+                  <p className="font-semibold text-white">Student pulse</p>
                 </div>
-              ))}
-            </div>
-          ) : null}
+                {mockStudentProfiles.slice(0, 6).map((profile) => (
+                  <div key={profile.id} className="rounded-2xl border border-white/10 bg-white/6 px-4 py-3">
+                    <p className="text-sm font-semibold text-white">{profile.group}</p>
+                    <p className="text-xs text-white/45">
+                      {profile.faculty} | Kurs {profile.course} | Reyting {profile.rating}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : null}
 
-          {role === "teacher" ? (
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <FileBadge2 className="h-5 w-5 text-cyan-600" />
-                <p className="font-semibold text-navy-900">Teacher operations</p>
-              </div>
-              {mockTeacherSchedules.slice(0, 4).map((schedule) => (
-                <div key={schedule.id} className="rounded-2xl border border-slate-200 bg-white/70 px-4 py-3">
-                  <p className="text-sm font-semibold text-navy-900">{schedule.subject}</p>
-                  <p className="text-xs text-slate-500">
-                    {schedule.weekday} | {schedule.startTime}-{schedule.endTime}
-                  </p>
+            {role === "teacher" ? (
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <FileBadge2 className="h-5 w-5 text-cyan-300" />
+                  <p className="font-semibold text-white">Teacher operations</p>
                 </div>
-              ))}
-            </div>
-          ) : null}
+                {mockTeacherSchedules.slice(0, 6).map((schedule) => (
+                  <div key={schedule.id} className="rounded-2xl border border-white/10 bg-white/6 px-4 py-3">
+                    <p className="text-sm font-semibold text-white">{schedule.subject}</p>
+                    <p className="text-xs text-white/45">
+                      {schedule.weekday} | {schedule.startTime}-{schedule.endTime}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </Card>
+        </div>
+      ) : (
+        <>
+          <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+            <Card>
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <div>
+                  <p className="font-['Space_Grotesk'] text-2xl font-bold text-white">Admin control center</p>
+                  <p className="text-sm text-white/55">Qidiruv, filter, pagination va action modallari bilan boshqaruv paneli.</p>
+                </div>
+                <Button size="sm" onClick={openCreateModal}>
+                  <Plus className="h-4 w-4" />
+                  Create modal
+                </Button>
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <Input className="max-w-sm" placeholder="Qidirish..." value={search} onChange={(event) => setSearch(event.target.value)} />
+                <Tabs
+                  items={adminTabs.map((item) => ({ id: item.id, label: item.label }))}
+                  value={tab}
+                  onChange={(value) => setTab(value as typeof tab)}
+                />
+              </div>
+            </Card>
 
-          {role === "admin" ? (
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <Boxes className="h-5 w-5 text-cyan-600" />
-                <p className="font-semibold text-navy-900">Campus ops</p>
-              </div>
-              <div className="grid gap-3 md:grid-cols-2">
-                <div className="rounded-2xl border border-slate-200 bg-white/70 px-4 py-4">
-                  <p className="text-lg font-bold text-navy-900">{mockRooms.length}</p>
-                  <p className="text-xs text-slate-500">Rooms mapped</p>
-                </div>
-                <div className="rounded-2xl border border-slate-200 bg-white/70 px-4 py-4">
-                  <p className="text-lg font-bold text-navy-900">{mockNfcTags.length}</p>
-                  <p className="text-xs text-slate-500">NFC points linked</p>
+            <Card>
+              <div className="mb-4 flex items-center gap-3">
+                <ShieldEllipsis className="h-5 w-5 text-cyan-300" />
+                <div>
+                  <p className="font-['Space_Grotesk'] text-xl font-bold text-white">System snapshot</p>
+                  <p className="text-sm text-white/55">Campus ops, AI settings va audit ko'rinishi.</p>
                 </div>
               </div>
-            </div>
-          ) : null}
+              <div className="grid gap-3">
+                <div className="rounded-[24px] border border-white/10 bg-white/6 p-4">
+                  <p className="text-sm font-semibold text-white">Rooms mapped</p>
+                  <p className="mt-2 text-3xl font-bold text-white">{mockRooms.length}</p>
+                </div>
+                <div className="rounded-[24px] border border-white/10 bg-white/6 p-4">
+                  <p className="text-sm font-semibold text-white">NFC points linked</p>
+                  <p className="mt-2 text-3xl font-bold text-white">{mockNfcTags.length}</p>
+                </div>
+                <div className="rounded-[24px] border border-white/10 bg-white/6 p-4">
+                  <p className="text-sm font-semibold text-white">Audit events</p>
+                  <p className="mt-2 text-3xl font-bold text-white">{mockAuditLogs.length}</p>
+                </div>
+              </div>
+            </Card>
+          </div>
 
-          {role === "super_admin" ? (
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <ShieldEllipsis className="h-5 w-5 text-cyan-600" />
-                <p className="font-semibold text-navy-900">Governance log</p>
-              </div>
-              {mockAuditLogs.map((log) => (
-                <div key={log.id} className="rounded-2xl border border-slate-200 bg-white/70 px-4 py-3">
-                  <p className="text-sm font-semibold text-navy-900">{log.action}</p>
-                  <p className="text-xs text-slate-500">{log.entity}</p>
-                </div>
-              ))}
-              <div className="rounded-2xl bg-navy-900 px-4 py-4 text-white">
-                <p className="font-semibold">System health {mockMonitoringStats.systemHealth.api}%</p>
-                <p className="mt-1 text-xs text-white/70">
-                  API keys, backup va audit trail qatlamlari ulashga tayyor.
-                </p>
-              </div>
+          <Card>
+            <div className="overflow-hidden rounded-[26px] border border-white/10">
+              <table className="w-full border-collapse text-left text-sm">
+                <thead className="bg-white/8 text-white/60">
+                  <tr>
+                    <th className="px-4 py-3 font-medium">Name</th>
+                    <th className="px-4 py-3 font-medium">Detail</th>
+                    <th className="px-4 py-3 font-medium">Status</th>
+                    <th className="px-4 py-3 font-medium">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paginatedAdminRows.map((row) => (
+                    <tr key={row.key} className="border-t border-white/10 bg-white/4">
+                      <td className="px-4 py-3 text-white">{row.title}</td>
+                      <td className="px-4 py-3 text-white/58">{row.subtitle}</td>
+                      <td className="px-4 py-3">
+                        <Badge tone="info">{row.status}</Badge>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <button
+                            className="inline-flex h-9 w-9 items-center justify-center rounded-2xl border border-white/10 bg-white/8 text-white/70"
+                            onClick={() => openEditModal(row)}
+                            type="button"
+                          >
+                            <Edit3 className="h-4 w-4" />
+                          </button>
+                          <button
+                            className="inline-flex h-9 w-9 items-center justify-center rounded-2xl border border-rose-400/20 bg-rose-500/10 text-rose-100"
+                            onClick={() => {
+                              setSelectedRow(row);
+                              setDeleteOpen(true);
+                            }}
+                            type="button"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          ) : null}
-        </Card>
-      </div>
+            <div className="mt-4 flex items-center justify-between text-xs text-white/45">
+              <div className="flex items-center gap-2">
+                <Button size="sm" variant="secondary" onClick={() => setPage((current) => Math.max(1, current - 1))}>
+                  Oldingi
+                </Button>
+                <Button size="sm" variant="secondary" onClick={() => setPage((current) => Math.min(totalPages, current + 1))}>
+                  Keyingi
+                </Button>
+              </div>
+              <span>
+                Page {page} / {totalPages}
+              </span>
+            </div>
+          </Card>
+        </>
+      )}
 
       <div className="grid gap-4 lg:grid-cols-3">
         <MetricCard
@@ -237,13 +442,14 @@ export const RoleDashboardPage = ({ role }: RoleDashboardPageProps) => {
           value={String(mockTeacherProfiles.length)}
           hint="Ask-any-teacher va office lookup uchun tayyor"
           icon={Users}
+          accent="cyan"
         />
         <MetricCard
           label="Subjects"
           value={String(mockSubjects.length)}
           hint="Academic content constructor bilan bog'langan"
           icon={BookOpenText}
-          accent="navy"
+          accent="violet"
         />
         <MetricCard
           label="System status"
@@ -253,6 +459,31 @@ export const RoleDashboardPage = ({ role }: RoleDashboardPageProps) => {
           accent="emerald"
         />
       </div>
+
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Create / Edit modal">
+        <div className="space-y-4">
+          <Input placeholder="Entity title" value={formTitle} onChange={(event) => setFormTitle(event.target.value)} />
+          <Input placeholder="Description" value={formSubtitle} onChange={(event) => setFormSubtitle(event.target.value)} />
+          <Input placeholder="Status" value={formStatus} onChange={(event) => setFormStatus(event.target.value)} />
+          <Button onClick={saveAdminRow}>Saqlash</Button>
+        </div>
+      </Modal>
+
+      <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)} title="Delete confirmation">
+        <div className="space-y-4">
+          <p className="text-sm leading-6 text-white/68">
+            Bu demo modal delete confirmation oqimini ko'rsatadi. Tasdiqlanganda local holat yangilanadi va jadval darhol o'zgaradi.
+          </p>
+          <div className="flex gap-3">
+            <Button variant="danger" onClick={confirmDelete}>
+              Delete
+            </Button>
+            <Button variant="secondary" onClick={() => setDeleteOpen(false)}>
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
