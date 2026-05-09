@@ -1,0 +1,61 @@
+MultimediaLab nomli zamonaviy, professional va to'liq responsive veb-sayt yarating.
+
+Loyiha maqsadi:
+Talaba, o'qituvchi va administrator uchun mo'ljallangan multimedia ta'lim platformasini tanishtiruvchi veb-sayt bo'lsin. Sayt o'zbek tilida yozilsin va platformaning asosiy arxitekturasi, modullari, rollari va imkoniyatlarini aniq ko'rsatsin.
+
+Dizayn talablari:
+- Zamonaviy va premium ko'rinish.
+- Desktop va mobil qurilmalarda to'liq responsive bo'lsin.
+- Oq, to'q ko'k, yashil va iliq aksent ranglardan foydalanilsin.
+- Hero bo'lim kuchli sarlavha, qisqa izoh va CTA tugmalar bilan bo'lsin.
+- Kartochkalar, yumaloq burchaklar, yumshoq soyalar va nozik animatsiyalar ishlatilsin.
+- Tipografika o'qilishi oson, ammo oddiy default ko'rinmasin.
+
+Kontent bo'limlari:
+1. Hero section
+- Platforma nomi: MultimediaLab
+- Qisqa tavsif: multimedia amaliyoti, elektron resurs yaratish, test va monitoringni birlashtirgan ta'lim platformasi
+- CTA tugmalar: "Rollarni ko'rish", "Arxitekturani ko'rish"
+
+2. Foydalanuvchi rollari
+- Talaba
+- O'qituvchi
+- Administrator
+
+Har bir rol uchun:
+- asosiy vazifasi
+- foydalanadigan interfeys va modullar
+- foydasi
+
+3. Ish jarayoni
+- Talaba topshiriqni qabul qiladi
+- Multimedia ishini yaratadi yoki yuklaydi
+- O'qituvchi tekshiradi va baholaydi
+- Administrator monitoring va hisobotni kuzatadi
+
+4. Arxitektura qatlamlari
+- Frontend
+- Backend
+- Integratsiya va media xizmatlari
+- Ma'lumotlarni saqlash
+- Natijalar
+
+Har bir qatlam uchun unga tegishli modullar kartochkalarda ko'rsatilsin.
+
+5. Asosiy imkoniyatlar
+- Multimedia topshiriqlari
+- Elektron resurs yaratish
+- Test va baholash
+- Monitoring va analitika
+
+6. Yakuniy CTA
+- Keyingi bosqichda login tizimi, admin panel, CRUD va ma'lumotlar bazasi ulanishi mumkinligi ko'rsatilsin.
+
+Texnik talablar:
+- HTML, CSS va JavaScript asosida yaratilishi mumkin.
+- Kod toza va modulli bo'lsin.
+- Kontent ma'lumotlari JSON yoki alohida data obyektidan olinishi mumkin.
+- Scroll navigation va bo'limlarga o'tish animatsiyasi bo'lsin.
+
+Muhim:
+Sayt shunchaki oddiy landing bo'lmasin. U ta'lim platformasi uchun ishonchli, aniq va mahsulot darajasidagi interfeys ko'rinishini bersin.

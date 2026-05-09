@@ -1,0 +1,5 @@
+Demo checklist
+
+- Kontent strukturasini tekshirish
+- Navigatsiyani tekshirish
+- Media sifati nazorati
