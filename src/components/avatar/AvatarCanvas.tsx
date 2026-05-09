@@ -1,5 +1,5 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment, Float } from "@react-three/drei";
+import { Float } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 import type { Group, Mesh, Object3D } from "three";
 
@@ -99,9 +99,9 @@ const AvatarModel = ({ speaking = false }: AvatarCanvasProps) => {
 export const AvatarCanvas = ({ speaking = false }: AvatarCanvasProps) => (
   <div className="h-[340px] overflow-hidden rounded-[28px] bg-[radial-gradient(circle_at_top,_rgba(111,232,255,0.28),_transparent_38%),linear-gradient(180deg,_#08192f_0%,_#0f2948_100%)]">
     <Canvas camera={{ position: [0, 0.35, 3.8], fov: 42 }}>
+      <color attach="background" args={["#08192f"]} />
       <ambientLight intensity={1.2} />
       <directionalLight position={[3, 4, 2]} intensity={1.8} castShadow />
-      <Environment preset="city" />
       <AvatarModel speaking={speaking} />
     </Canvas>
   </div>

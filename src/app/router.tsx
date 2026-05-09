@@ -20,6 +20,7 @@ import { PortfolioPage } from "./pages/PortfolioPage";
 import { ReceptionPage } from "./pages/ReceptionPage";
 import { MonitoringPage } from "./pages/MonitoringPage";
 import { SettingsPage } from "./pages/SettingsPage";
+import { RouteErrorPage } from "../components/error/RouteErrorPage";
 import { Card } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { useAppStore } from "../store/useAppStore";
@@ -54,6 +55,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <RouteErrorPage />,
     children: [
       { index: true, element: <HomePage /> },
       { path: "login", element: <LoginPage /> },

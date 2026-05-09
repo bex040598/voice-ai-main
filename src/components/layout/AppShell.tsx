@@ -5,6 +5,8 @@ import { Topbar } from "./Topbar";
 import { AvatarCanvas } from "../avatar/AvatarCanvas";
 import { Card } from "../ui/Card";
 import { Badge } from "../ui/Badge";
+import { AppErrorBoundary } from "../error/AppErrorBoundary";
+import { ErrorFallback } from "../error/ErrorFallback";
 import { useAppStore } from "../../store/useAppStore";
 import { AssistantDock } from "../assistant/AssistantDock";
 import { ToastViewport } from "../ui/ToastViewport";
@@ -32,7 +34,17 @@ export const AppShell = ({ children }: PropsWithChildren) => {
               </div>
               <Badge tone="info">R3F</Badge>
             </div>
-            <AvatarCanvas speaking={assistantMessages[assistantMessages.length - 1]?.role === "assistant"} />
+            <AppErrorBoundary
+              fallback={
+                <ErrorFallback
+                  compact
+                  title="3D avatar vaqtincha yuklanmadi"
+                  description="Avatar sahnasi ishlamay qolsa ham qolgan ATMURA modullari ochiladi."
+                />
+              }
+            >
+              <AvatarCanvas speaking={assistantMessages[assistantMessages.length - 1]?.role === "assistant"} />
+            </AppErrorBoundary>
           </Card>
 
           <Card>
