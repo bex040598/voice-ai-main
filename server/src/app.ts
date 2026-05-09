@@ -26,15 +26,18 @@ export const createApp = () => {
   const currentDir = path.dirname(currentFile);
   const clientDistDir = path.resolve(currentDir, "../../dist");
 
+  app.set("trust proxy", 1);
+
+  // Keep the Render health check path fast and independent from the rest of the middleware stack.
+  app.get("/api/health", (_request, response) => {
+    response.status(200).json({ status: "ok" });
+  });
+
   app.use(cors());
   app.use(helmet());
   app.use(express.json());
   app.use(morgan("dev"));
   app.use(rateLimitMiddleware);
-
-  app.get("/api/health", (_request, response) => {
-    response.json({ status: "ok" });
-  });
 
   app.use("/api/auth", authRoutes);
   app.use("/api/users", usersRoutes);

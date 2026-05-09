@@ -3,6 +3,11 @@ import type { NextFunction, Request, Response } from "express";
 const cache = new Map<string, { count: number; timestamp: number }>();
 
 export const rateLimitMiddleware = (request: Request, response: Response, next: NextFunction): void => {
+  if (request.path === "/api/health") {
+    next();
+    return;
+  }
+
   const key = `${request.ip}:${request.path}`;
   const now = Date.now();
   const entry = cache.get(key);

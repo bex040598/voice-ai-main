@@ -4,6 +4,7 @@ import { createApp } from "./app.js";
 import { db } from "./database/mockDb.js";
 
 const port = Number(process.env.PORT ?? 4000);
+const host = process.env.HOST ?? "0.0.0.0";
 const app = createApp();
 const server = createServer(app);
 const io = new Server(server, {
@@ -21,6 +22,6 @@ setInterval(() => {
   io.emit("monitoring:update", db.monitoringStats);
 }, 15_000);
 
-server.listen(port, () => {
-  console.info(`ATMURA mock server listening on http://localhost:${port}`);
+server.listen(port, host, () => {
+  console.info(`ATMURA mock server listening on http://${host}:${port}`);
 });
