@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATMURA Assistant</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="assistant-page">
+    <main class="assistant-shell">
+        <section class="assistant-hero-card">
+            <div>
+                <p class="eyebrow">Voice emotion lab</p>
+                <h1>Ovoz, chat va avatar bilan ishlovchi AI assistant</h1>
+                <p class="lead">
+                    Uzbek voice, speech-to-text, assistant thinking/speaking holatlari va custom avatar uchun tayyor infratuzilma.
+                </p>
+            </div>
+            <button id="assistantMicTop" class="primary-btn">Record</button>
+        </section>
+
+        <section class="assistant-grid">
+            <div class="card voice-card">
+                <div class="card-head">
+                    <div>
+                        <h2>Voice input</h2>
+                        <p>Katta mikrofon tugmasi va transcript oqimi.</p>
+                    </div>
+                    <span class="badge" id="mainStateBadge">Standby</span>
+                </div>
+                <div class="voice-orb" id="mainMicButton">Mic</div>
+                <div class="waveform" id="waveform">
+                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="transcript-label">Transcript panel</div>
+                <div class="transcript-box" id="transcriptBox">Savol yozing yoki mikrofonni bosing.</div>
+            </div>
+
+            <div class="card radar-card">
+                <div class="card-head">
+                    <div>
+                        <h2>Assistant analysis</h2>
+                        <p>Joriy holat va javob oqimi ko'rinishi.</p>
+                    </div>
+                    <span class="badge">Live</span>
+                </div>
+                <div class="analysis-list">
+                    <div><span>Recognition</span><strong id="recognitionState">Idle</strong></div>
+                    <div><span>Speech output</span><strong id="speechState">Ready</strong></div>
+                    <div><span>Fallback</span><strong id="fallbackState">Uzbek voice</strong></div>
+                </div>
+                <div class="response-box" id="assistantResponsePreview">Assistant javobi shu yerda ko'rinadi.</div>
+            </div>
+
+            <div class="card avatar-card">
+                <div class="avatar-stage hero-avatar idle" id="mainAvatar">
+                    <div class="avatar-orbit"></div>
+                    <div class="avatar-core">
+                        <div class="avatar-head">
+                            <span class="eye left"></span>
+                            <span class="eye right"></span>
+                            <span class="mouth"></span>
+                        </div>
+                        <div class="avatar-neck"></div>
+                        <div class="avatar-body"></div>
+                    </div>
+                </div>
+                <div class="avatar-state-label" id="avatarStateLabel">ATMURA kutish rejimida</div>
+                <div class="state-pills">
+                    <span>Online</span>
+                    <span>Listening</span>
+                    <span>Thinking</span>
+                    <span>Speaking</span>
+                </div>
+            </div>
+
+            <div class="card route-card">
+                <div class="card-head">
+                    <div>
+                        <h2>Chat panel</h2>
+                        <p>Matnli savol-javob va voice TTS.</p>
+                    </div>
+                    <span class="badge">Online</span>
+                </div>
+                <div class="assistant-modes">
+                    <label><input type="radio" name="assistant-main" value="1" checked> Browser TTS</label>
+                    <label><input type="radio" name="assistant-main" value="2"> Voice AI</label>
+                </div>
+                <div class="chat-box large-box" id="main-chat-box">
+                    <div class="message ai">
+                        <div class="bubble">Assalomu alaykum. Men ATMURA Guest assistantiman. Universitet bo'yicha savol bering.</div>
+                    </div>
+                </div>
+                <div class="input-area">
+                    <button id="main-mic-btn" class="icon-btn" aria-label="Mic">Mic</button>
+                    <input id="main-user-input" type="text" placeholder="Masalan: Universitet qayerda joylashgan?">
+                    <button id="main-send-btn" class="icon-btn send" aria-label="Send">&gt;</button>
+                </div>
+                <div class="status-text" id="main-status"></div>
+            </div>
+
+            <div class="card upload-card">
+                <div class="card-head">
+                    <div>
+                        <h2>Custom avatar tayyorligi</h2>
+                        <p>Keyinchalik image upload orqali avatar almashtirish uchun scaffold.</p>
+                    </div>
+                    <span class="badge">Beta</span>
+                </div>
+                <label class="upload-zone">
+                    <input id="avatarUpload" type="file" accept="image/*">
+                    <span>Avatar uchun rasm yuklashga tayyor blok. Hozircha preview-only bosqich.</span>
+                </label>
+                <div class="upload-preview" id="uploadPreview">No custom image selected</div>
+            </div>
+        </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

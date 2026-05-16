@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: atmu-smart-unilibrary
+    runtime: docker
+    repo: https://github.com/bex040598/voice-ai-main
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    autoDeploy: true
+    healthCheckPath: /

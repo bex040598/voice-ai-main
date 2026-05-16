@@ -16,3 +16,14 @@ test_*.py
 # Documentation for development
 *.md
 !README.md
+
+# Frontend local artifacts
+frontend/node_modules/
+frontend/dist/
+frontend/*.tsbuildinfo
+frontend/vite.config.js
+frontend/vite.config.d.ts
+
+# Python caches
+backend/__pycache__/
+backend/services/__pycache__/

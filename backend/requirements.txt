@@ -1,11 +1,4 @@
 fastapi
 uvicorn
 python-dotenv
-openai
-google-generativeai
-python-multipart
-numpy
-scikit-learn
-torch
-transformers
-scipy
+httpx
